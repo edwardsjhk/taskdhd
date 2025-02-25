@@ -2,6 +2,9 @@ Taskdhd is designed as a list making web app to help people with ADHD by showing
 
 The web app was made partly with help of generative AI.
 
+To use locally, download the html file and open it in your browser. 
+
+The online web app version is hosted here on Github: https://edwardsjhk.github.io/taskdhd/
 
 Issues:
 Re-ordering list items is currently only supported in mobile.
