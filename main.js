@@ -1,4 +1,49 @@
-        document.addEventListener('DOMContentLoaded', function() {
+    if (touch.pageY < box.top + box.height / 2) {
+      list.insertBefore(placeholder, item);
+      return;
+    }
+  }
+
+  list.appendChild(placeholder);
+}
+
+function handleTouchEnd() {
+  if (!currentDragItem) return;
+
+  // Drop item into placeholder
+  placeholder.parentNode.insertBefore(currentDragItem, placeholder);
+  placeholder.remove();
+  placeholder = null;
+
+  // Reset styles
+  currentDragItem.style.position = "";
+  currentDragItem.style.top = "";
+  currentDragItem.style.width = "";
+  currentDragItem.style.zIndex = "";
+  currentDragItem.classList.remove("dragging");
+  currentDragItem = null;
+
+  saveItems();
+}
+
+     
+
+        function saveItems() {
+            const items = [];
+            document.querySelectorAll('.list-item').forEach(item => {
+                items.push(item.textContent.replace('X', '').trim());
+            });
+            setCookie('listItems', JSON.stringify(items), 365);
+        }
+
+        function setCookie(name, value, days) {
+            const expires = new Date();
+            expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+            document.cookie = name + '=' + value + ';expires=' + expires.toUTCString();
+        }
+
+        function getCookie(name) {
+                    document.addEventListener('DOMContentLoaded', function() {
             const savedItems = getCookie('listItems');
             if (savedItems) {
                 const items = JSON.parse(savedItems);
@@ -92,52 +137,7 @@ function handleTouchMove(e) {
 
   for (let item of items) {
     const box = item.getBoundingClientRect();
-    if (touch.pageY < box.top + box.height / 2) {
-      list.insertBefore(placeholder, item);
-      return;
-    }
-  }
-
-  list.appendChild(placeholder);
-}
-
-function handleTouchEnd() {
-  if (!currentDragItem) return;
-
-  // Drop item into placeholder
-  placeholder.parentNode.insertBefore(currentDragItem, placeholder);
-  placeholder.remove();
-  placeholder = null;
-
-  // Reset styles
-  currentDragItem.style.position = "";
-  currentDragItem.style.top = "";
-  currentDragItem.style.width = "";
-  currentDragItem.style.zIndex = "";
-  currentDragItem.classList.remove("dragging");
-  currentDragItem = null;
-
-  saveItems();
-}
-
-     
-
-        function saveItems() {
-            const items = [];
-            document.querySelectorAll('.list-item').forEach(item => {
-                items.push(item.textContent.replace('X', '').trim());
-            });
-            setCookie('listItems', JSON.stringify(items), 365);
-        }
-
-        function setCookie(name, value, days) {
-            const expires = new Date();
-            expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
-            document.cookie = name + '=' + value + ';expires=' + expires.toUTCString();
-        }
-
-        function getCookie(name) {
-            const nameEQ = name + '=';
+const nameEQ = name + '=';
             const ca = document.cookie.split(';');
             for(let i = 0; i < ca.length; i++) {
                 let c = ca[i];
@@ -146,3 +146,18 @@ function handleTouchEnd() {
             }
             return null;
         }
+        
+const addBar = document.getElementById("addbar");
+
+window.visualViewport.addEventListener("resize", () => {
+  const viewportHeight = window.visualViewport.height;
+  const totalHeight = window.innerHeight;
+
+  // If viewport shrinks, keyboard is open
+  if (viewportHeight < totalHeight) {
+    addBar.style.bottom = (totalHeight - viewportHeight) + "px";
+  } else {
+    addBar.style.bottom = "0px";
+  }
+});
+
