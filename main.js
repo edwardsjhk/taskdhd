@@ -48,61 +48,79 @@
             saveItems();
         }
 
-       let touchOffsetY = 0;
+    let placeholder = null;
+let offsetY = 0;
 
 function handleTouchStart(e) {
-    if (e.target.className === 'delete-btn') return;
+  if (e.target.classList.contains("delete-btn")) return;
 
-    e.preventDefault();
-    const touch = e.touches[0];
-    currentDragItem = this;
-    currentDragItemRect = this.getBoundingClientRect();
-    itemHeight = currentDragItemRect.height;
+  const touch = e.touches[0];
+  currentDragItem = this;
+  const rect = currentDragItem.getBoundingClientRect();
 
-    touchOffsetY = touch.pageY - currentDragItemRect.top; // Record offset within item
+  offsetY = touch.pageY - rect.top;
 
-    currentDragItem.classList.add('dragging');
-    items = Array.from(document.querySelectorAll('.list-item:not(.dragging)'));
+  // Create placeholder
+  placeholder = document.createElement("li");
+  placeholder.className = "placeholder";
+  placeholder.style.height = rect.height + "px";
+  currentDragItem.parentNode.insertBefore(placeholder, currentDragItem);
+
+  // Move item out of flow
+  currentDragItem.style.position = "absolute";
+  currentDragItem.style.width = rect.width + "px";
+  currentDragItem.style.zIndex = 1000;
+  currentDragItem.classList.add("dragging");
+
+  moveAt(touch.pageY);
+}
+
+function moveAt(pageY) {
+  currentDragItem.style.top = pageY - offsetY + "px";
 }
 
 function handleTouchMove(e) {
-    if (!currentDragItem) return;
-    e.preventDefault();
+  if (!currentDragItem) return;
+  e.preventDefault();
 
-    const touch = e.touches[0];
-    const translateY = touch.pageY - currentDragItemRect.top - touchOffsetY;
-    currentDragItem.style.transform = `translateY(${translateY}px)`;
+  const touch = e.touches[0];
+  moveAt(touch.pageY);
 
-    const currentY = touch.pageY;
-    let closestItem = null;
-    let closestDistance = Number.NEGATIVE_INFINITY;
+  // Check where placeholder should go
+  const list = document.getElementById("sortableList");
+  const items = Array.from(list.querySelectorAll(".list-item:not(.dragging)"));
 
-    items.forEach(item => {
-        const box = item.getBoundingClientRect();
-        const boxCenterY = box.top + box.height / 2;
-        const distance = currentY - boxCenterY;
-
-        if (distance < 0 && distance > closestDistance) {
-            closestDistance = distance;
-            closestItem = item;
-        }
-    });
-
-    if (closestItem) {
-        currentDragItem.parentNode.insertBefore(currentDragItem, closestItem);
-    } else {
-        currentDragItem.parentNode.appendChild(currentDragItem);
+  for (let item of items) {
+    const box = item.getBoundingClientRect();
+    if (touch.pageY < box.top + box.height / 2) {
+      list.insertBefore(placeholder, item);
+      return;
     }
+  }
+
+  list.appendChild(placeholder);
 }
 
-        function handleTouchEnd() {
-            if (!currentDragItem) return;
-            
-            currentDragItem.style.transform = '';
-            currentDragItem.classList.remove('dragging');
-            currentDragItem = null;
-            saveItems();
-        }
+function handleTouchEnd() {
+  if (!currentDragItem) return;
+
+  // Drop item into placeholder
+  placeholder.parentNode.insertBefore(currentDragItem, placeholder);
+  placeholder.remove();
+  placeholder = null;
+
+  // Reset styles
+  currentDragItem.style.position = "";
+  currentDragItem.style.top = "";
+  currentDragItem.style.width = "";
+  currentDragItem.style.zIndex = "";
+  currentDragItem.classList.remove("dragging");
+  currentDragItem = null;
+
+  saveItems();
+}
+
+     
 
         function saveItems() {
             const items = [];
