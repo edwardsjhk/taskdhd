@@ -146,3 +146,37 @@ function handleTouchEnd() {
             }
             return null;
         }
+        
+        
+// === Keyboard-aware reposition for add bar ===
+(function () {
+  const addBar = document.getElementById('addBar');
+  if (!addBar) return;
+
+  const setShift = (px) => {
+    document.documentElement.style.setProperty('--keyboard-shift', px ? `-${px}px` : '0px');
+    document.documentElement.style.setProperty('--bottom-inset', px ? `${px}px` : '0px');
+  };
+
+  const reposition = () => {
+    const vv = window.visualViewport;
+    if (!vv) {
+      setShift(0);
+      return;
+    }
+    const keyboard = Math.max(0, window.innerHeight - (vv.height + vv.offsetTop));
+    setShift(keyboard > 40 ? keyboard : 0);
+  };
+
+  const vv = window.visualViewport;
+  if (vv) {
+    vv.addEventListener('resize', reposition);
+    vv.addEventListener('scroll', reposition);
+  }
+  window.addEventListener('orientationchange', () => setTimeout(reposition, 0));
+  window.addEventListener('resize', reposition);
+  document.addEventListener('focusin', reposition);
+  document.addEventListener('focusout', () => setTimeout(reposition, 0));
+
+  reposition();
+})();

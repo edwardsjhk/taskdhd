@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
     <title>TaskDHD</title>
     <link rel="stylesheet" href="style.css">
-   
 </head>
 <body>
     <div class="container">
         <ul id="sortableList"></ul>
     </div>
 
-    <div class="input-container">
+    <!-- Add bar (id changed so JS can hook reliably) -->
+    <div id="addBar" class="input-container">
         <div class="input-wrapper">
             <input type="text" id="newItem" placeholder="Add new item">
             <button onclick="addItem()">Add</button>
@@ -19,6 +20,5 @@
     </div>
     
     <script src="main.js"></script>
-   
 </body>
 </html>
