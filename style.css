@@ -133,3 +133,12 @@
                 font-weight: bold;
             }
         }
+        
+.list-item.dragging {
+  opacity: 0.9;
+}
+.placeholder {
+  border: 2px dashed #ccc;
+  margin: 4px 0;
+}
+
