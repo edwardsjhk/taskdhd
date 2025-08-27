@@ -102,6 +102,26 @@ button:active {
     background-color: #f8f8f8;
 }
 
+.list-item:nth-child(1) { font-size: 32px; font-weight: bold; color: red; }
+
+.list-item:nth-child(2) { font-size: 25px; font-weight: bold; }
+
+.list-item:nth-child(3) { font-size: 20px; font-weight: bold;}
+
+.list-item:nth-child(4) { font-size: 16px; }
+
+.list-item:nth-child(5) { font-size: 12px; }
+
+.list-item:nth-child(6) { font-size: 10px; }
+
+.list-item:nth-child(7) { font-size: 9px; }
+
+.list-item:nth-child(8) { font-size: 8px; }
+
+.list-item:nth-child(9) { font-size: 7px; }
+
+.list-item:nth-child(n+10) { font-size: 6px; }
+
 .delete-btn {
     position: absolute;
     right: 15px;
